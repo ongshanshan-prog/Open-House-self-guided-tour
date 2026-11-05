@@ -145,12 +145,11 @@ main { padding-block: 18px 36px; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
   background: var(--silver); opacity: .55; transition: opacity .3s, background .3s; }
 .stamp::before { content: ""; position: absolute; inset: 3px; clip-path: var(--hex); background: var(--silver-soft); }
-.stamp b { position: relative; font: 700 1.75rem/1 var(--f-kai); color: var(--silver); }
-.stamp small { position: relative; font: 800 .6rem/1 var(--f-display); color: var(--silver); letter-spacing: .04em; }
+.stamp b { position: relative; font: 700 2rem/1 var(--f-kai); color: var(--silver); }
+.v { font-family: var(--f-kai); font-weight: 700; }
 .stamp.on { opacity: 1; background: var(--gold); }
 .stamp.on::before { background: linear-gradient(160deg, #EF4B3F, var(--red) 45%, var(--red-ink)); }
 .stamp.on b { color: #FFFFFF; text-shadow: 0 1px 2px rgba(120,20,15,.45); }
-.stamp.on small { color: #FFE9A8; }
 .stamp.new { animation: hexIn .8s cubic-bezier(.2,1.4,.4,1) both; }
 @keyframes hexIn { 0% { transform: scale(1.45); filter: grayscale(1) brightness(1.3); opacity: .4; } 60% { transform: scale(.95); filter: grayscale(0); opacity: 1; } 100% { transform: none; filter: none; opacity: 1; } }
 .passport .msg { font-weight: 700; color: var(--muted); font-size: .92rem; }
@@ -179,7 +178,7 @@ main { padding-block: 18px 36px; }
 .cp::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--blue); }
 .cp.photo::before { background: var(--red); }
 .cp:active { transform: scale(.98); }
-.cp .num { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font: 800 1.2rem/1 var(--f-display); background: var(--blue-soft); color: var(--blue); }
+.cp .num { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font: 700 1.6rem/1 var(--f-kai); background: var(--blue-soft); color: var(--blue); }
 .cp.photo .num { background: var(--red-soft); color: var(--red-ink); }
 .cp .t { font: 700 1rem/1.25 var(--f-display); display: block; }
 .cp .venue { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: .85rem; font-weight: 600; margin-top: 2px; }
@@ -279,7 +278,7 @@ textarea { min-height: 96px; resize: vertical; }
 .party .mascot { position: absolute; left: 50%; top: -120px; height: 180px; width: auto; transform: translateX(-50%); animation: hop .9s .25s ease both; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25)); }
 @keyframes hop { 0% { transform: translate(-50%, 60px) scale(.7); opacity: 0; } 50% { transform: translate(-50%, -14px) scale(1.04); opacity: 1; } 70% { transform: translate(-50%, 0) scale(1); } 85% { transform: translate(-50%, -5px); } 100% { transform: translate(-50%, 0); } }
 .party .big-stamp { position: absolute; right: 18px; top: 12px; width: 58px; max-width: none; animation: hexIn .8s .45s cubic-bezier(.2,1.4,.4,1) both; }
-.party .big-stamp b { font-size: 1.6rem; }
+.party .big-stamp b { font-size: 1.9rem; }
 .party h2 { font-size: 1.6rem; color: var(--red); }
 .party p { color: var(--muted); font-weight: 700; }
 .party .mini { display: flex; justify-content: center; gap: 6px; margin: 4px 0 6px; }
@@ -547,6 +546,8 @@ window.addEventListener('hashchange', () => render());
 
 // The school motto's eight virtues, one per checkpoint stamp: row 1 忠孝仁爱, row 2 礼义廉耻
 const VIRTUES = ['忠', '孝', '仁', '爱', '礼', '义', '廉', '耻'];
+// Checkpoints are known by their virtue instead of a number (checkpoint 1 = 忠, 2 = 孝 …)
+const V = c => `<span class="v" lang="zh">${VIRTUES[c.n - 1]}</span>`;
 
 function stampCard() {
   const n = doneCount(), total = CHECKPOINTS.length, left = total - n;
@@ -557,7 +558,7 @@ function stampCard() {
     <div class="sec-title"><h2>My tour stamp card</h2><small>${n} of ${total}</small></div>
     <div class="stamps">${CHECKPOINTS.map(c => {
       const ok = S.cleared[c.n];
-      return `<${A} class="stamp${ok ? ' on' : ''}${ok && c.n === justStamped ? ' new' : ''}" href="#cp${c.n}" aria-label="Checkpoint ${c.n}, ${VIRTUES[c.n - 1]}${ok ? ', cleared' : ''}"><b lang="zh">${VIRTUES[c.n - 1]}</b><small>${c.n}</small></${A}>`;
+      return `<${A} class="stamp${ok ? ' on' : ''}${ok && c.n === justStamped ? ' new' : ''}" href="#cp${c.n}" aria-label="Checkpoint ${VIRTUES[c.n - 1]}${ok ? ', cleared' : ''}"><b lang="zh">${VIRTUES[c.n - 1]}</b></${A}>`;
     }).join('')}</div>
     <p class="msg">${msg}</p>
     ${n === total ? `<${A} class="btn btn-main" href="#thanks">See your finish</${A}>` : ''}
@@ -591,7 +592,7 @@ function viewHome() {
     <ol class="cps">${CHECKPOINTS.map(c => {
       const ok = S.cleared[c.n];
       return `<li><${A} class="cp ${c.type}${ok ? ' is-done' : ''}" href="#cp${c.n}">
-        <span class="num">${ok ? ICON.done : c.n}</span>
+        <span class="num" lang="zh">${VIRTUES[c.n - 1]}</span>
         <span>
           <span class="t">${esc(c.title)}</span>
           <span class="venue">${ICON.pin}${esc(c.venue)}${c.block ? ' · ' + esc(c.block) : ''}</span>
@@ -613,7 +614,7 @@ function viewCheckpoint(c) {
   $('#view').innerHTML = `
   <div class="banner ${c.type}"><div class="wrap">
     <${A} class="back" href="#">${ICON.back}All checkpoints</${A}>
-    <span class="eyebrow">Checkpoint ${c.n} of ${CHECKPOINTS.length} · ${c.type === 'talk' ? 'Chat with a Nanhuarian' : 'Take a photo'}</span>
+    <span class="eyebrow">Checkpoint ${V(c)} · ${c.type === 'talk' ? 'Chat with a Nanhuarian' : 'Take a photo'}</span>
     <h1>${esc(c.title)}</h1>
     <div class="where"><span class="pill">${ICON.pin}${esc(c.venue)}${c.block ? ' · ' + esc(c.block) : ''}</span><span class="pill">${esc(c.focus)}</span></div>
   </div><div class="stripe"></div></div>
@@ -654,7 +655,7 @@ function talkForm(c) {
       ${a.kind === 'long' ? `<textarea id="a${i}" maxlength="400"></textarea>` : `<input id="a${i}" type="text" maxlength="30" autocomplete="off" autocapitalize="sentences">`}
     </div>`).join('')}
     <p class="err" id="err" role="alert" hidden></p>
-    <button class="btn btn-main" type="submit">${ICON.done}Clear checkpoint ${c.n}</button>
+    <button class="btn btn-main" type="submit">${ICON.done}Clear checkpoint ${V(c)}</button>
   </form>`;
   const form = $('#act form');
   form.querySelectorAll('.chips').forEach(g => g.addEventListener('click', e => {
@@ -701,7 +702,7 @@ function photoForm(c) {
     <input id="cam" type="file" accept="image/*" capture="environment" hidden>
     <p class="private">${ICON.lock}<span>Your photo stays on your phone. It is not uploaded or kept by the school.</span></p>
     <p class="err" id="err" role="alert" hidden></p>
-    <button class="btn btn-main" type="button" id="clear" disabled>${ICON.done}Clear checkpoint ${c.n}</button>
+    <button class="btn btn-main" type="button" id="clear" disabled>${ICON.done}Clear checkpoint ${V(c)}</button>
   </div>`;
   $('#cam').addEventListener('change', e => {
     const f = e.target.files && e.target.files[0];
@@ -766,7 +767,7 @@ function storySheet(c, justCleared, then) {
   box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'sheetTitle');
   box.innerHTML = `<div class="panel">
     <div class="top">
-      ${justCleared ? `<span class="done-pill">${ICON.done}Photo taken · Checkpoint ${c.n} cleared</span>` : ''}
+      ${justCleared ? `<span class="done-pill">${ICON.done}Photo taken · Checkpoint ${V(c)} cleared</span>` : ''}
       <span class="eyebrow">${st.eyebrow}</span>
       <h2 id="sheetTitle">${st.title}</h2>
       <p>${st.sub}</p>
@@ -888,13 +889,13 @@ function celebrate(c) {
   box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'partyTitle');
   box.innerHTML = `<div class="box">
     <img class="mascot" src="${guideFor(c)}" alt="">
-    <span class="stamp on big-stamp" aria-hidden="true"><b lang="zh">${VIRTUES[c.n - 1]}</b><small>${c.n}</small></span>
+    <span class="stamp on big-stamp" aria-hidden="true"><b lang="zh">${VIRTUES[c.n - 1]}</b></span>
     <h2 id="partyTitle">${esc(cheer)}</h2>
-    <p>Checkpoint ${c.n} cleared. You got the stamp!</p>
+    <p>Checkpoint ${V(c)} cleared. You got the stamp!</p>
     <div class="mini" aria-hidden="true">${CHECKPOINTS.map(x => `<i class="${S.cleared[x.n] ? 'on' : ''}${x.n === c.n ? ' now' : ''}"></i>`).join('')}</div>
     <p style="color:var(--ink)">${line}</p>
     <div class="row" style="margin-top:6px">
-      ${next ? `<${A} class="btn btn-main" href="#cp${next.n}" data-close>Go to checkpoint ${next.n}</${A}>` : ''}
+      ${next ? `<${A} class="btn btn-main" href="#cp${next.n}" data-close>Go to checkpoint ${V(next)}</${A}>` : ''}
       <${A} class="btn btn-ghost" href="#" data-close>See my stamp card</${A}>
     </div>
   </div>`;
@@ -952,7 +953,7 @@ function showCleared(c) {
     ${S.photos[c.n] ? `<div class="shot"><img src="${S.photos[c.n]}" alt="${esc(c.photoLabel)}"></div>` : ''}
     ${c.story ? `<button class="btn btn-ghost" type="button" id="story">${esc(c.story)}</button>` : ''}
     <div class="row">
-      ${next ? `<${A} class="btn btn-main" href="#cp${next.n}">Next: Checkpoint ${next.n}</${A}>` : `<${A} class="btn btn-main" href="#thanks">See your finish</${A}>`}
+      ${next ? `<${A} class="btn btn-main" href="#cp${next.n}">Next: Checkpoint ${V(next)}</${A}>` : `<${A} class="btn btn-main" href="#thanks">See your finish</${A}>`}
       <${A} class="btn btn-ghost" href="#">My stamp card</${A}>
     </div>
   </div>`;
