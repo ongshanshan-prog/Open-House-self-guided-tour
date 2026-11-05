@@ -408,6 +408,7 @@ function applyContent(sheet) {
   const merged = BUILT_IN.checkpoints.map(d => {
     const r = rows[d.n], c = JSON.parse(JSON.stringify(d));
     if (!r) return c;
+    if (r.type === 'chat') r.type = 'talk';  // "chat" is what visitors see; inside the app it is still type 'talk'
     if (r.type === 'talk' || r.type === 'photo') c.type = r.type;
     ['title', 'venue', 'task'].forEach(k => { if (has(r, k) && r[k].trim()) c[k] = r[k].trim(); });
     ['block', 'focus', 'photoLabel'].forEach(k => { if (has(r, k)) c[k] = r[k].trim(); });
@@ -583,7 +584,7 @@ function viewHome() {
   <main class="wrap stack">
     ${stampCard()}
     ${n ? '' : `<div class="how">
-      <div><span class="ic talk">${ICON.talk}</span><b>Talk</b><p>${rich(T('how_talk'))}</p></div>
+      <div><span class="ic talk">${ICON.talk}</span><b>Chat</b><p>${rich(T('how_talk'))}</p></div>
       <div><span class="ic photo">${ICON.photo}</span><b>Snap</b><p>${rich(T('how_snap'))}</p></div>
     </div>`}
     <div class="sec-title" style="margin-top:6px"><h2>Checkpoints</h2><small>Any order you like</small></div>
@@ -594,7 +595,7 @@ function viewHome() {
         <span>
           <span class="t">${esc(c.title)}</span>
           <span class="venue">${ICON.pin}${esc(c.venue)}${c.block ? ' · ' + esc(c.block) : ''}</span>
-          <span class="tag">${ok ? ICON.done + 'Cleared' : ICON[c.type] + (c.type === 'talk' ? 'Talk to a Nanhuarian' : 'Take a photo')}</span>
+          <span class="tag">${ok ? ICON.done + 'Cleared' : ICON[c.type] + (c.type === 'talk' ? 'Chat with a Nanhuarian' : 'Take a photo')}</span>
         </span>
         <span class="go">${ICON.go}</span>
       </${A}></li>`;
@@ -612,7 +613,7 @@ function viewCheckpoint(c) {
   $('#view').innerHTML = `
   <div class="banner ${c.type}"><div class="wrap">
     <${A} class="back" href="#">${ICON.back}All checkpoints</${A}>
-    <span class="eyebrow">Checkpoint ${c.n} of ${CHECKPOINTS.length} · ${c.type === 'talk' ? 'Talk to a Nanhuarian' : 'Take a photo'}</span>
+    <span class="eyebrow">Checkpoint ${c.n} of ${CHECKPOINTS.length} · ${c.type === 'talk' ? 'Chat with a Nanhuarian' : 'Take a photo'}</span>
     <h1>${esc(c.title)}</h1>
     <div class="where"><span class="pill">${ICON.pin}${esc(c.venue)}${c.block ? ' · ' + esc(c.block) : ''}</span><span class="pill">${esc(c.focus)}</span></div>
   </div><div class="stripe"></div></div>
