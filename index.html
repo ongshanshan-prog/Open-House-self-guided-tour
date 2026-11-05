@@ -377,7 +377,7 @@ textarea { min-height: 96px; resize: vertical; }
 
 <footer class="foot"><div class="wrap">
   <div id="footAddr">Nan Hua High School · 南华中学 · 41 Clementi Ave 1</div>
-  <div><a href="https://script.google.com/macros/s/AKfycbz1gY4EZR-jaa9YITc5EA3OTPm8EMiUaH3-x9CUjjP15La3OS7WruohsDszcPEMUOb4tQ/exec">Back to the Open House website</a> · <button class="linkbtn" type="button" id="restart" aria-expanded="false" aria-controls="restartAsk">Start over</button></div>
+  <div><a href="https://nhhs-openhouse.github.io/2026/">Back to the Open House website</a> · <button class="linkbtn" type="button" id="restart" aria-expanded="false" aria-controls="restartAsk">Start over</button></div>
   <div class="ask" id="restartAsk" hidden>
     <p>Start the tour over? This clears your stamps and photos on this phone.</p>
     <div class="row"><button class="btn btn-main" type="button" id="restartYes">Yes, start over</button><button class="btn btn-ghost" type="button" id="restartNo">Keep my progress</button></div>
@@ -443,7 +443,7 @@ applyContent(savedContent);
 /* Texts tab formatting: *words* are highlighted, [words] links to the campus guide */
 function rich(s) {
   return esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]/g, `<${'a'} href="https://script.google.com/macros/s/AKfycbz1gY4EZR-jaa9YITc5EA3OTPm8EMiUaH3-x9CUjjP15La3OS7WruohsDszcPEMUOb4tQ/exec#campus">$1</${'a'}>`);
+    .replace(/\[([^\]]+)\]/g, `<${'a'} href="https://nhhs-openhouse.github.io/2026/#campus">$1</${'a'}>`);
 }
 const T = k => TEXTS[k] || '';
 
